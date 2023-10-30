@@ -11,11 +11,11 @@ cd threeeJstest
 ```
 
 install dependecies
-```node
+```bash
 npm install
 ```
 
 run the webapp
-```node
-npx vite
+```bash
+npm run dev
 ```
