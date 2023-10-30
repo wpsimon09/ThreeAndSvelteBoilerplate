@@ -11,10 +11,12 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
 camera.position.z = 40
 const renderer = new THREE.WebGLRenderer();
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
-
 
 const controls = new OrbitControls( camera, renderer.domElement );
 
@@ -22,11 +24,18 @@ const lightColor = 0xFDB813;
 
 const gltfLoader = new GLTFLoader();
 
-const ambient = new THREE.AmbientLight(lightColor, 5 )
+const ambient = new THREE.AmbientLight(lightColor, 0.5 )
 const directionLight = new THREE.DirectionalLight(lightColor, 10);
-directionLight.position.set(50, 30, 0)
+directionLight.position.set(100, 100, 0)
 directionLight.castShadow = true;
-directionLight.shadow
+
+directionLight.shadow.mapSize.width = 512; // default
+directionLight.shadow.mapSize.height = 512; // default
+directionLight.shadow.camera.near = 0.5; // default
+directionLight.shadow.camera.far = 500; // default
+
+
+
 const geometry = new THREE.BoxGeometry(2, 2, 2)
 const material = new THREE.MeshBasicMaterial({ wireframe: true })
 const cube = new THREE.Mesh(geometry, material)
@@ -37,7 +46,8 @@ let treeObject;
 scene.add(directionLight);
 scene.add(ambient);
 scene.add(cube);
-gltfLoader.load('models/savana.glb', (gltf) => {
+gltfLoader.load('models/savana2.glb', (gltf) => {
+   gltf.scene.receiveShadow = true;
    scene.add(gltf.scene);
    console.log(gltf);
 });
